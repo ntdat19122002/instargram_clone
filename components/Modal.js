@@ -1,10 +1,13 @@
 import { modalState } from '@/atoms/modalAtom'
-import { useRef, useState, Fragment} from 'react'
+import React, { useRef, useState } from 'react'
 import { useRecoilState } from 'recoil'
 import { Dialog, Transition } from '@headlessui/react'
+import { Fragment } from 'react'
 import { CameraIcon } from '@heroicons/react/outline'
-// import {db} from '../firebase.js'
+import { db,storage } from '../firebase'
+import { addDoc, collection, doc, serverTimestamp, updateDoc } from 'firebase/firestore'
 import { useSession } from 'next-auth/react'
+import { getDownloadURL, ref, uploadString } from 'firebase/storage'
 
 export default function Modal() {
     const {data:session} = useSession()
@@ -19,28 +22,28 @@ export default function Modal() {
         
         setLoading(true)
 
-        // const docRef = await addDoc(collection(db,'posts'),{
-        //     username: session.user.username,
-        //     caption: captionRef.current.value,
-        //     profileImg: session.user.image,
-        //     timestams: serverTimestamp()
-        // })
+        const docRef = await addDoc(collection(db,'posts'),{
+            username: session.user.username,
+            caption: captionRef.current.value,
+            profileImg: session.user.image,
+            timestams: serverTimestamp()
+        })
 
-        // const imageRef = ref(storage, `posts/${docRef.id}/image`);
+        const imageRef = ref(storage, `posts/${docRef.id}/image`);
 
-        // await uploadString(imageRef, selectFile, "data_url").then(
-        //     async snapshot => {
-        //         const downloadURL = await getDownloadURL(imageRef)
+        await uploadString(imageRef, selectFile, "data_url").then(
+            async snapshot => {
+                const downloadURL = await getDownloadURL(imageRef)
             
-        //         await updateDoc(doc(db,'posts', docRef.id),{
-        //             image: downloadURL
-        //         })
-        //     }
-        // )
+                await updateDoc(doc(db,'posts', docRef.id),{
+                    image: downloadURL
+                })
+            }
+        )
 
-        // setOpen(false)
-        // setLoading(false)
-        // setSelectedFile(null)
+        setOpen(false)
+        setLoading(false)
+        setSelectedFile(null)
     }
 
     const addImageToPost = (e) => {
