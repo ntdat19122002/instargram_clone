@@ -66,7 +66,7 @@ function Header() {
 
                     {session ? (
                         <>
-                            <MenuIcon  className='h-6 md:hidden cursor-pointer' onClick={()=>setDrop(!drop)}/>
+                            {/* <MenuIcon  className='h-6 md:hidden cursor-pointer' onClick={()=>setDrop(!drop)}/> */}
                             <PlusCircleIcon onClick={()=>setOpen(true)} className='navBtn block md:hidden' />
                            
 
