@@ -10,9 +10,14 @@ import {
 } from '@heroicons/react/outline'
 import { signIn, signOut, useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
+import { modalState } from '@/atoms/modalAtom';
+import { useRecoilState } from 'recoil';
+
+import '../firebase'
 
 function Header() {
     const { data: session } = useSession();
+    const [open, setOpen] = useRecoilState(modalState)
     const router = useRouter()
 
     return (
@@ -63,7 +68,7 @@ function Header() {
                             h-5 bg-red-500 rounded-full flex items-center justify-center 
                             animate-pulse text-white">3</div>
                             </div>
-                            <PlusCircleIcon className='navBtn' />
+                            <PlusCircleIcon onClick={()=>setOpen(true)} className='navBtn' />
                             <UserGroupIcon className='navBtn' />
                             <HeartIcon className='navBtn' />
                             <img
