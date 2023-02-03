@@ -12,11 +12,17 @@ import { signIn, signOut, useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { modalState } from '@/atoms/modalAtom';
 import { useRecoilState } from 'recoil';
+import { use, useEffect, useState } from 'react';
 
 function Header() {
     const { data: session } = useSession();
     const [open, setOpen] = useRecoilState(modalState)
     const router = useRouter()
+    const [drop,setDrop] = useState(false)
+
+    useEffect(()=>{
+        console.log(drop);
+    })
 
     return (
         <div className='shadow-sm border-b bg-white sticky top-0 z-50'>
@@ -56,10 +62,14 @@ function Header() {
 
                 <div className="flex items-center justify-end space-x-4">
                     <HomeIcon onClick={()=> router.push('/')} className='navBtn' />
-                    <MenuIcon className='h-6 md:hidden cursor-pointer' />
+                    
 
                     {session ? (
                         <>
+                            <MenuIcon  className='h-6 md:hidden cursor-pointer' onClick={()=>setDrop(!drop)}/>
+                            <PlusCircleIcon onClick={()=>setOpen(true)} className='navBtn block md:hidden' />
+                           
+
                             <div className="relative navBtn">
                                 <PaperAirplaneIcon className='navBtn' />
                                 <div className="absolute -top-1 -right-1 text-xs w-5
